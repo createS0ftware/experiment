@@ -2,8 +2,6 @@ package com.thesurix.example.gesturerecycler.fragment;
 
 import com.thesurix.example.gesturerecycler.R;
 import com.thesurix.example.gesturerecycler.model.Month;
-import com.thesurix.example.gesturerecycler.model.MonthHeader;
-import com.thesurix.example.gesturerecycler.model.MonthItem;
 import com.thesurix.gesturerecycler.GestureManager;
 
 import android.os.Bundle;
@@ -42,21 +40,21 @@ public class BaseFragment extends Fragment {
         inflater.inflate(R.menu.recycler_menu, menu);
     }
 
-    protected List<MonthItem> getMonths() {
-        final List<MonthItem> monthList = new ArrayList<>();
-        monthList.add(new MonthHeader("First quarter"));
+    protected List<Month> getMonths() {
+        final List<Month> monthList = new ArrayList<>();
+
         monthList.add(new Month("JAN", R.drawable.january));
         monthList.add(new Month("FEB", R.drawable.february));
         monthList.add(new Month("MAR", R.drawable.march));
-        monthList.add(new MonthHeader("Second quarter"));
+
         monthList.add(new Month("APR", R.drawable.april));
         monthList.add(new Month("MAY", R.drawable.may));
         monthList.add(new Month("JUN", R.drawable.june));
-        monthList.add(new MonthHeader("Third quarter"));
+
         monthList.add(new Month("JUL", R.drawable.july));
         monthList.add(new Month("AUG", R.drawable.august));
         monthList.add(new Month("SEP", R.drawable.september));
-        monthList.add(new MonthHeader("Fourth quarter"));
+
         monthList.add(new Month("OCT", R.drawable.october));
         monthList.add(new Month("NOV", R.drawable.november));
         monthList.add(new Month("DEC", R.drawable.december));

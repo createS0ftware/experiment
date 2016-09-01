@@ -4,10 +4,14 @@ import com.thesurix.example.gesturerecycler.R;
 import com.thesurix.gesturerecycler.GestureViewHolder;
 
 import android.animation.ArgbEvaluator;
+import android.animation.IntEvaluator;
 import android.animation.ValueAnimator;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import butterknife.Bind;
@@ -20,17 +24,14 @@ public class MonthViewHolder extends GestureViewHolder {
 
     @Bind(R.id.month_text) TextView mMonthText;
     @Bind(R.id.month_image) ImageView mMonthPicture;
-    @Bind(R.id.mont_drag) ImageView mItemDrag;
+    @Bind(R.id.itemLayout) RelativeLayout mItemLayout;
+
+
+    private int tempHeight;
 
     public MonthViewHolder(final View view) {
         super(view);
         ButterKnife.bind(this, view);
-    }
-
-    @Nullable
-    @Override
-    public View getDraggableView() {
-        return mItemDrag;
     }
 
     @Override
@@ -48,6 +49,15 @@ public class MonthViewHolder extends GestureViewHolder {
         backgroundAnimation.setDuration(SELECT_DURATION_IN_MS);
         backgroundAnimation.addUpdateListener(getBackgroundAnimatorListener(mMonthText, backgroundAnimation));
         backgroundAnimation.start();
+
+        tempHeight = itemView.getHeight();
+        final int heightFrom    = tempHeight;
+        final int heightTo      = mMonthText.getHeight();
+        final ValueAnimator heightAnimation = ValueAnimator.ofObject(new IntEvaluator(), heightFrom, heightTo);
+        heightAnimation.setDuration(SELECT_DURATION_IN_MS);
+        heightAnimation.addUpdateListener(getLayoutAnimator(mMonthPicture, heightAnimation));
+        heightAnimation.start();
+
     }
 
     @Override
@@ -65,6 +75,13 @@ public class MonthViewHolder extends GestureViewHolder {
         backgroundAnimation.setDuration(SELECT_DURATION_IN_MS);
         backgroundAnimation.addUpdateListener(getBackgroundAnimatorListener(mMonthText, backgroundAnimation));
         backgroundAnimation.start();
+
+        final int heightFrom    = mMonthText.getHeight();
+        final int heightTo      = tempHeight;
+        final ValueAnimator heightAnimation = ValueAnimator.ofObject(new IntEvaluator(), heightFrom, heightTo);
+        heightAnimation.setDuration(SELECT_DURATION_IN_MS);
+        heightAnimation.addUpdateListener(getLayoutAnimator(mMonthPicture, heightAnimation));
+        heightAnimation.start();
     }
 
     @Override
@@ -91,6 +108,18 @@ public class MonthViewHolder extends GestureViewHolder {
             @Override
             public void onAnimationUpdate(final ValueAnimator valueAnimator) {
                 view.setTextColor((int) animator.getAnimatedValue());
+            }
+        };
+    }
+
+    private ValueAnimator.AnimatorUpdateListener getLayoutAnimator(final ImageView view, final ValueAnimator animator) {
+        return new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(final ValueAnimator valueAnimator) {
+                int val = (Integer) animator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+                layoutParams.height = val;
+                view.setLayoutParams(layoutParams);
             }
         };
     }
