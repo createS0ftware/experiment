@@ -1,9 +1,13 @@
 package com.thesurix.example.gesturerecycler.fragment;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,14 +16,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
-
 import com.thesurix.example.gesturerecycler.DetailActivity;
 import com.thesurix.example.gesturerecycler.R;
-import com.thesurix.example.gesturerecycler.adapter.BigLayoutManager;
 import com.thesurix.example.gesturerecycler.adapter.MonthsAdapter;
 import com.thesurix.example.gesturerecycler.model.Month;
-import com.thesurix.example.gesturerecycler.utils.DeviceUtils;
+import com.thesurix.gesturerecycler.BigLayoutManager;
 import com.thesurix.gesturerecycler.DefaultItemClickListener;
 import com.thesurix.gesturerecycler.GestureAdapter;
 import com.thesurix.gesturerecycler.GestureManager;
@@ -40,35 +44,56 @@ public class LinearRecyclerFragment extends BaseFragment {
         return rootView;
     }
 
+
+    Point lastPos;
+
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final BigLayoutManager manager = new BigLayoutManager(getContext());
+        final BigLayoutManager manager = new BigLayoutManager(getContext(),680);
         final MonthsAdapter adapter = new MonthsAdapter(getContext(), R.layout.linear_item);
         adapter.setData(getMonths());
-
+        lastPos = new Point();
         manager.setOrientation(LinearLayoutManager.VERTICAL);
-        manager.setExtraLayoutSpace(DeviceUtils.getScreenHeight(getContext()));
+      //  manager.setExtraLayoutSpace(DeviceUtils.getScreenHeight(getContext()));
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.addOnItemTouchListener(new RecyclerItemTouchListener(getActivity(), new DefaultItemClickListener() {
             @Override
             public boolean onItemClick(final View view, final int position) {
+                lastPos = new Point();
+                if (lastPos.y == 0) {
+                    Animation movingAnim = new TranslateAnimation(0, 0, 0, -view.getTop());
+                    movingAnim.setDuration(400);
+                    movingAnim.setFillAfter(true);
+                    movingAnim.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                            Intent dataInfo = new Intent(getActivity(),DetailActivity.class);
+                            dataInfo.putExtra("image",adapter.getData().get(position).getDrawableId());
+                            startActivityForResult(dataInfo,99);
+                        }
 
-                    // Scene animation
-                ivProfile = (ImageView) view.findViewById(R.id.month_image);
-                Intent intent = new Intent(getActivity(), DetailActivity.class);
-                ActivityOptionsCompat options = ActivityOptionsCompat.
-                        makeSceneTransitionAnimation(getActivity(), ivProfile, "month");
-                startActivity(intent, options.toBundle());
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            view.setVisibility(View.INVISIBLE);
+                        }
 
-                 return true;
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
+                    view.startAnimation(movingAnim);
+                }
+
+                return true;
             }
 
             @Override
             public void onItemLongPress(final View view, final int position) {
-                Snackbar.make(view, "Long press event on the " + position + " position", Snackbar.LENGTH_SHORT).show();
+
             }
 
             @Override
@@ -95,6 +120,13 @@ public class LinearRecyclerFragment extends BaseFragment {
                 Snackbar.make(view, "Month moved from position " + fromPos + " to " + toPos, Snackbar.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mRecyclerView.invalidate();
+        mRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
