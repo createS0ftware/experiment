@@ -29,8 +29,7 @@ public class RecyclerActivity extends AppCompatActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        overridePendingTransition(0,0);
         setContentView(R.layout.activity_recycler);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

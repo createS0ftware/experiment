@@ -96,8 +96,7 @@ public class LinearRecyclerFragment extends BaseFragment {
 
             @Override
             public boolean onDoubleTap(final View view, final int position) {
-                Snackbar.make(view, "Double tap event on the " + position + " position", Snackbar.LENGTH_SHORT).show();
-                return true;
+                 return true;
             }
         }));
 
