@@ -8,4 +8,7 @@
     <color name="pink_500">#e91e63</color>
     <color name="cardview_shadow_start_color">#00ffffff</color>
     <color name="cardview_shadow_end_color">#00ffffff</color>
+
+
+    <color name="transparent_back">#70ffffff</color>
 </resources>
