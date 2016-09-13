@@ -8,11 +8,13 @@
     card_view:cardCornerRadius="@dimen/card_corner_radius"
     card_view:cardElevation="@dimen/card_elevation"
     app:cardUseCompatPadding="true"
+    android:padding="10dp"
     app:cardPreventCornerOverlap="false">
     
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_margin="10dp"
+        android:layout_height="wrap_content">
         
         <ImageView
             android:id="@+id/month_image"

@@ -1,14 +1,10 @@
 package com.thesurix.example.gesturerecycler.fragment;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -19,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+
 import com.thesurix.example.gesturerecycler.DetailActivity;
 import com.thesurix.example.gesturerecycler.R;
 import com.thesurix.example.gesturerecycler.adapter.MonthsAdapter;
@@ -44,49 +41,50 @@ public class LinearRecyclerFragment extends BaseFragment {
         return rootView;
     }
 
-
     Point lastPos;
+    MonthsAdapter adapter;
+    View lastView;
 
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final BigLayoutManager manager = new BigLayoutManager(getContext(),680);
-        final MonthsAdapter adapter = new MonthsAdapter(getContext(), R.layout.linear_item);
+        final BigLayoutManager manager = new BigLayoutManager(getContext(), 680);
+        adapter = new MonthsAdapter(getContext(), R.layout.linear_item);
         adapter.setData(getMonths());
         lastPos = new Point();
         manager.setOrientation(LinearLayoutManager.VERTICAL);
-      //  manager.setExtraLayoutSpace(DeviceUtils.getScreenHeight(getContext()));
+        //  manager.setExtraLayoutSpace(DeviceUtils.getScreenHeight(getContext()));
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.addOnItemTouchListener(new RecyclerItemTouchListener(getActivity(), new DefaultItemClickListener() {
             @Override
             public boolean onItemClick(final View view, final int position) {
-                lastPos = new Point();
-                if (lastPos.y == 0) {
-                    Animation movingAnim = new TranslateAnimation(0, 0, 0, -view.getTop());
-                    movingAnim.setDuration(400);
-                    movingAnim.setFillAfter(true);
-                    movingAnim.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {
-                            Intent dataInfo = new Intent(getActivity(),DetailActivity.class);
-                            dataInfo.putExtra("image",adapter.getData().get(position).getDrawableId());
-                            startActivityForResult(dataInfo,99);
-                        }
+                lastPos = new Point(Float.valueOf(view.getX()).intValue(), Float.valueOf(view.getY()).intValue());
+                lastView = view;
+                Animation movingAnim = new TranslateAnimation(0, 0, 0, -view.getTop());
+                movingAnim.setDuration(800);
+                movingAnim.setFillAfter(true);
+                movingAnim.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
 
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            view.setVisibility(View.INVISIBLE);
-                        }
+                    }
 
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        Intent dataInfo = new Intent(getActivity(), DetailActivity.class);
+                        dataInfo.putExtra("image", adapter.getData().get(position).getDrawableId());
+                        startActivityForResult(dataInfo, 99);
+                    }
 
-                        }
-                    });
-                    view.startAnimation(movingAnim);
-                }
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                view.startAnimation(movingAnim);
+
 
                 return true;
             }
@@ -125,8 +123,30 @@ public class LinearRecyclerFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mRecyclerView.invalidate();
-        mRecyclerView.getAdapter().notifyDataSetChanged();
+        lastView.setTop(0);
+        Animation movingAnim = new TranslateAnimation(0, 0, 0, lastPos.y);
+        movingAnim.setDuration(800);
+        movingAnim.setFillAfter(true);
+        movingAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                mRecyclerView.invalidate();
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        lastView.startAnimation(movingAnim);
+
+
     }
 
     @Override

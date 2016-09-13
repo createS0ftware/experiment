@@ -10,7 +10,7 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        overridePendingTransition(0,0);
         setContentView(R.layout.activity_detail);
         ((ImageView)findViewById(R.id.month_image)).setImageDrawable(getResources().getDrawable(getIntent().getIntExtra("image",0)));
 

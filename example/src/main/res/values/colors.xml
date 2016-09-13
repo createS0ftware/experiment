@@ -10,5 +10,5 @@
     <color name="cardview_shadow_end_color">#00ffffff</color>
 
 
-    <color name="transparent_back">#70ffffff</color>
+    <color name="transparent_back">#00ffffff</color>
 </resources>
