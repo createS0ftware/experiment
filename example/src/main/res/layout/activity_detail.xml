@@ -4,18 +4,133 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:id="@+id/mainLayout"
+    android:background="@color/cardview_dark_background"
     android:paddingRight="@dimen/activity_horizontal_margin"
+    android:visibility="invisible"
     tools:context="com.thesurix.example.gesturerecycler.DetailActivity">
 
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="300dp"
-        android:id="@+id/month_image"
+    <LinearLayout
+        android:id="@+id/frame"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></LinearLayout>
+
+    <android.support.v7.widget.CardView
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        card_view:cardBackgroundColor="@android:color/transparent"
+        card_view:cardCornerRadius="@dimen/card_corner_radius"
+        card_view:cardElevation="0dp"
+        app:cardUseCompatPadding="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:scaleType="fitXY"
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        app:cardPreventCornerOverlap="true"
+        android:id="@+id/view">
+
+        <RelativeLayout
+            android:id="@+id/itemLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/linear_item_height">
+
+            <ImageView
+                android:id="@+id/month_image2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:cropToPadding="true"
+                android:padding="2dp"
+                android:scaleType="fitXY" />
+
+            <TextView
+                android:id="@+id/month_text2"
+                android:layout_width="@dimen/linear_text_width"
+                android:layout_height="105dp"
+                android:paddingLeft="@dimen/linear_text_padding"
+                android:paddingRight="@dimen/linear_text_padding"
+                android:textColor="@android:color/white"
+                android:background="@color/indigo_500"
+                android:gravity="center_vertical"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/view">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#b4a3a3">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="14dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Large Text"
+                android:id="@+id/textView21"
+                android:background="#ffffff" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_margin="14dp"
+                android:text="Large Text"
+                android:id="@+id/textView2"
+                android:background="#ffffff" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="14dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Large Text"
+                android:id="@+id/textView23"
+                android:background="#ffffff" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Large Text"
+                android:layout_margin="14dp"
+                android:id="@+id/textView4"
+                android:background="#ffffff" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_margin="14dp"
+                android:layout_height="50dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Large Text"
+                android:id="@+id/textView25"
+                android:background="#ffffff" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_margin="14dp"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Large Text"
+                android:id="@+id/textView6"
+                android:background="#ffffff" />
+        </LinearLayout>
+    </ScrollView>
+
 </RelativeLayout>

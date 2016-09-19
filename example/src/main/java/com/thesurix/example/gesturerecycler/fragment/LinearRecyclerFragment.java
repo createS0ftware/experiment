@@ -29,7 +29,6 @@ import com.thesurix.gesturerecycler.RecyclerItemTouchListener;
 public class LinearRecyclerFragment extends BaseFragment {
 
 
-    ImageView ivProfile;
 
     @Nullable
     @Override
@@ -55,6 +54,7 @@ public class LinearRecyclerFragment extends BaseFragment {
         lastPos = new Point();
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         //  manager.setExtraLayoutSpace(DeviceUtils.getScreenHeight(getContext()));
+
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.addOnItemTouchListener(new RecyclerItemTouchListener(getActivity(), new DefaultItemClickListener() {
@@ -74,6 +74,8 @@ public class LinearRecyclerFragment extends BaseFragment {
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         Intent dataInfo = new Intent(getActivity(), DetailActivity.class);
+                        dataInfo.putExtra("width", adapter.getData().get(position).getDrawableId());
+                        dataInfo.putExtra("height", adapter.getData().get(position).getDrawableId());
                         dataInfo.putExtra("image", adapter.getData().get(position).getDrawableId());
                         startActivityForResult(dataInfo, 99);
                     }
@@ -125,16 +127,15 @@ public class LinearRecyclerFragment extends BaseFragment {
         lastView.setTop(0);
         Animation movingAnim = new TranslateAnimation(0, 0, 0, lastPos.y);
         movingAnim.setDuration(800);
+        movingAnim.setStartTime(200);
         movingAnim.setFillAfter(true);
         movingAnim.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                mRecyclerView.invalidate();
                 adapter.notifyDataSetChanged();
             }
 

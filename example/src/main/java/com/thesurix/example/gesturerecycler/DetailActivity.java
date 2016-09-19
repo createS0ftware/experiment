@@ -6,21 +6,81 @@ import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.support.v4.animation.ValueAnimatorCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class DetailActivity extends AppCompatActivity {
 
+    @Bind(R.id.month_image2)
+    ImageView detailImage;
+
+    @Bind(R.id.mainLayout)
     RelativeLayout relativeLayout;
+
+    @Bind(R.id.month_text2)
+    TextView monthText;
+
+    @Bind(R.id.scrollView)
+    ScrollView scrollView;
+
+    @Bind(R.id.frame)
+    LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overridePendingTransition(0,0);
         setContentView(R.layout.activity_detail);
-        relativeLayout = (RelativeLayout) findViewById(R.id.mainLayout);
-        ((ImageView)findViewById(R.id.month_image)).setImageDrawable(getResources().getDrawable(getIntent().getIntExtra("image",0)));
+        ButterKnife.bind(this);
+        monthText.setText("MAY");
+        detailImage.setImageDrawable(getResources().getDrawable(getIntent().getIntExtra("image",0)));
+        startAnimation();
+    }
+
+    private void startAnimation()
+    {
+        final TranslateAnimation slideUpDrawer = new TranslateAnimation(0,0, scrollView.getHeight(), -1600);
+        slideUpDrawer.setDuration(800);
+        slideUpDrawer.setFillAfter(true);
+        slideUpDrawer.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        AlphaAnimation fadeInAnimation = new AlphaAnimation(0f, 1f);
+        fadeInAnimation.setDuration(400L);
+        fadeInAnimation.setFillAfter(true);
+        fadeInAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                relativeLayout.setVisibility(View.VISIBLE);
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                scrollView.startAnimation(slideUpDrawer);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        relativeLayout.startAnimation(fadeInAnimation);
+
 
     }
 
@@ -38,37 +98,26 @@ public class DetailActivity extends AppCompatActivity {
     private void exitAnimation()
     {
         // fade backgound
-        ValueAnimator valueAnimator = ValueAnimator.ofObject(new ArgbEvaluator(),R.color.cardview_dark_background, R.color.cardview_light_background);
-        valueAnimator.setInterpolator(new AccelerateInterpolator(1.5F));
-        valueAnimator.setDuration(1400L);
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+        AlphaAnimation alphaAnimation = new AlphaAnimation(1f,0f);
+        alphaAnimation.setDuration(500);
+        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                relativeLayout.setBackgroundColor((Integer) animation.getAnimatedValue());
-            }
-        });
-        valueAnimator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
+            public void onAnimationStart(Animation animation) {
 
             }
 
             @Override
-            public void onAnimationEnd(Animator animation) {
+            public void onAnimationEnd(Animation animation) {
                 readyToExit = true;
                 onBackPressed();
             }
 
             @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
+            public void onAnimationRepeat(Animation animation) {
 
             }
         });
-        valueAnimator.start();
+        relativeLayout.startAnimation(alphaAnimation);
     }
 }
